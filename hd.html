@@ -46,6 +46,11 @@
                             type="button" role="tab" aria-controls="nav-zpevent" aria-selected="true">
                             ZP Events
                         </button>
+                         <button class="nav-link" id="nav-zoomappapis-tab" data-bs-toggle="tab"
+                            data-bs-target="#nav-zoomappapis" type="button" role="tab" aria-controls="nav-zoomappapis"
+                            aria-selected="false">
+                            Zapp APIs
+                        </button>
                     </div>
                 </nav>
                 <br>
@@ -106,6 +111,39 @@
                             <p>Waiting for first event...</p>
                         </div>
                     </div>
+
+                    <div class="tab-pane fade" id="nav-zoomappapis" role="tabpanel"
+                        aria-labelledby="nav-zoomappapis-tab">
+                        <p>This section shows general Zoom Apps SDK methods/apis and the data returned by Zoom Apps SDK.
+                            This data must be polled by this app. For this test app purpose, you need to manually click
+                            the
+                            buttons below.</p>
+
+                        <zoom-app-api zoomappfunction="getAppContext" @run-zoomappfunction="getAppContext"
+                            :zoomappdata="AppContext" @zoomappdata-null="AppContext=null"></zoom-app-api>
+
+                        <div v-if="AppContext" class="card bg-light mb-3">
+                            <div class="card-header">
+                                Decrypted App Context
+                            </div>
+                            <div class="card-body">
+                                <p>Note: app context shown above is an encrypted json object that must be
+                                    decrypted by
+                                    Zoom
+                                    App
+                                    clientID/clientSecret. Below is the decrypted object.
+                                </p>
+                                <pre v-if="DecryptedAppContext"
+                                    class="card-text">{{JSON.stringify(DecryptedAppContext, undefined, 2)}}</pre>
+                            </div>
+                        </div>
+
+                        <zoom-app-api zoomappfunction="getRunningContext" @run-zoomappfunction="getRunningContext"
+                            :zoomappdata="RunningContext" @zoomappdata-null="RunningContext=null"></zoom-app-api>
+
+
+
+                        </div>
 
 
                  </div>
