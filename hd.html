@@ -1,0 +1,616 @@
+
+<!DOCTYPE html>
+<html data-bs-theme="light" lang="en" style="--bs-success: #00ff91;--bs-success-rgb: 0,255,145;">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <title>Zoom Apps Test Tool</title>
+    <link rel="stylesheet" href="https://zcczoomapp.web.app/css/bootstrap.min.css">
+    <script src="https://appssdk.zoom.us/sdk.js"></script>
+    <script src="https://zcczoomapp.web.app/js/bootstrap.bundle.min.js"></script>
+
+    <style>
+        .nav {
+            --bs-nav-link-padding-x: 0.5rem;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app">
+            
+        <!-- Zoom Apps Test Mode -->
+        <div v-if="appMode=='test'">
+            <nav class="navbar navbar-expand-md sticky-top bg-body" data-bs-theme="dark">
+                <div class="container-fluid justify-content-center">\
+                    <h1 class="text-white">Zoom Apps Test Tool</h1>
+                </div>
+                <div class="container-fluid justify-content-right">\
+                    <svg @click.prevent="switchAppMode('demo')" xmlns="http://www.w3.org/2000/svg" width="16"
+                        height="16" fill="white" class="bi bi-toggle-off" viewBox="0 0 16 16">
+                        <path
+                            d="M11 4a4 4 0 0 1 0 8H8a5 5 0 0 0 2-4 5 5 0 0 0-2-4zm-6 8a4 4 0 1 1 0-8 4 4 0 0 1 0 8M0 8a5 5 0 0 0 5 5h6a5 5 0 0 0 0-10H5a5 5 0 0 0-5 5" />
+                    </svg>
+                </div>
+
+            </nav>
+            <br>
+            <div class="container">
+ 
+                <nav>
+                    <div class="nav nav-tabs" id="nav-tab" role="tablist">
+                        <button class="nav-link active" id="nav-zccevent-tab" data-bs-toggle="tab"
+                            data-bs-target="#nav-zccevent" type="button" role="tab" aria-controls="nav-zccevent"
+                            aria-selected="true">
+                            ZCC Events
+                        </button>
+                        
+                        <button class="nav-link" id="nav-zpevent-tab" data-bs-toggle="tab" data-bs-target="#nav-zpevent"
+                            type="button" role="tab" aria-controls="nav-zpevent" aria-selected="true">
+                            ZP Events
+                        </button>
+                    </div>
+                </nav>
+                <br>
+                <!-- Flexbox container for aligning the toasts -->
+                <div aria-live="polite" aria-atomic="true" class="d-flex justify-content-center align-items-top w-100">
+
+                    <div id="warningToast" class="toast text-black bg-warning"
+                        style="width: 600px; position: absolute; top: 10; right: 50; z-index: 1" role=" alert"
+                        aria-live="assertive" aria-atomic="true">
+                        <div class="toast-header">
+                            <strong class="me-auto">WARNING</strong>
+                            <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+                        </div>
+                        <div class="toast-body">
+                            {{zoomAppAPIError}}
+                        </div>
+                    </div>
+                </div>
+                <div class="tab-content" id="nav-tabContent">
+                    <!-- ZCC Events -->
+                    <div class="tab-pane fade show active" id="nav-zccevent" role="tabpanel"
+                        aria-labelledby="nav-zccevent-tab">
+                        <p>This section shows Zoom Contact Center engagement events received by this Zoom App. This Zoom
+                            App
+                            is listening for
+                            onEngagementContextChange, onEngagementEnd, & onEngagementMediaRedirect</p>
+                        <button @click.prevent="zcc_events=null">Clear Events</button><br><br>
+                        <div v-if="zcc_events">
+                            <div v-for="event in zcc_events.slice().reverse()" class="card bg-light mb-3">
+                                <div class="card-header">{{event.name}}</div>
+                                <div class="card-body">
+                                    <pre class="card-text">{{JSON.stringify(event.payload, undefined, 2)}}</pre>
+                                </div>
+                            </div>
+                        </div>
+                        <div v-else>
+                            <p>Waiting for first event...</p>
+                        </div>
+                    </div>
+                    
+
+                    <!-- ZP Events -->
+                    <div class="tab-pane fade" id="nav-zpevent" role="tabpanel" aria-labelledby="nav-zpevent-tab">
+                        <p>This section shows Zoom Phone events received by this Zoom App. This Zoom App is listening
+                            for
+                            onPhoneContext, onPhoneCalleeAnswered, onPhoneCallerEnded, onPhoneCalleeEnded,
+                            onPhoneCalleeRejected, onPhoneCallerMeetingInviting, onPhoneCalleeMeetingInvite</p>
+                        <button @click.prevent="zp_events=null">Clear Events</button><br><br>
+                        <div v-if="zp_events">
+                            <div v-for="event in zp_events.slice().reverse()" class="card bg-light mb-3">
+                                <div class="card-header">{{event.name}}</div>
+                                <div class="card-body">
+                                    <pre class="card-text">{{JSON.stringify(event.payload, undefined, 2)}}</pre>
+                                </div>
+                            </div>
+                        </div>
+                        <div v-else>
+                            <p>Waiting for first event...</p>
+                        </div>
+                    </div>
+
+
+                 </div>
+
+
+
+                <hr>
+
+            </div>
+        </div>
+    </div>
+
+    <script src="https://zcczoomapp.web.app/js/vue3-3-8.js"></script>
+
+    <script type="module">
+        const app = Vue.createApp({
+            data() {
+                return {
+                    appMode: "test",
+                    contactToView: null,
+                    contacts: [{
+                        "name": "Clara Arellano", "id": "carellano", "email": "clara@omzo.net", "account": "Ozmo", "location": "London", "orders": "5", "phone": "+16503334444"
+                    }, {
+                        "name": "Darrel Marquez", "id": "dmarquez", "email": "darrel@omzo.net", "account": "Ozmo", "location": "Kansas City", "orders": "5", "phone": "+16503334445"
+                    }, {
+                        "name": "Hester Wilson", "id": "hwilson", "email": "hester@omzo.net", "account": "Ozmo", "location": "Atlanta", "orders": "5", "phone": "+16503334446"
+                    }, {
+                        "name": "John Chen", "id": "jchen", "email": "john@omzo.net", "account": "Ozmo", "location": "Denver", "orders": "5", "phone": "+16503334447"
+                    }, {
+                        "name": "Katie Carter", "id": "kcarter", "email": "katie@omzo.net", "account": "Ozmo", "location": "Chicago", "orders": "5", "phone": "+16503334448"
+                    }, {
+                        "name": "Shawna Owen", "id": "sowen", "email": "shawna@omzo.net", "account": "Ozmo", "location": "New York", "orders": "5", "phone": "+16503334449"
+                    }
+                    ],
+                    code: "",
+                    AppContext: null,
+                    DecryptedAppContext: null,
+                    RunningContext: null,
+                    zoomapp_events: null,
+                    engagementContext: null,
+                    engagementSecureableStatus: null,
+                    zcc_events: null,
+                    phoneContext: null,
+                    phoneNumbertoCall: "",
+                    zp_events: null,
+                    zoom_app_clientID: '',
+                    zoomAppAPIError: "",
+                }
+            },
+            methods: {
+                switchAppMode: function (appMode) {
+                    this.appMode = appMode;
+                    localStorage.setItem("appMode", appMode);
+                },
+                getAppContext: async function (event) {
+
+                    let that = this
+                    console.log("getting app context")
+
+                    console.log(that.zoom_app_clientID);
+
+                    const AppContext = await zoomSdk.getAppContext()
+                        .then((ctx) => {
+                            console.log("App Context", ctx);
+                            that.AppContext = ctx;
+
+                            fetch('https://zcczoomapp.web.app/api/appcontext', {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify({ clientId: that.zoom_app_clientID, appContext: that.AppContext })
+                            })
+                                .then(response => response.json())
+                                .then(data => {
+                                    that.DecryptedAppContext = data;
+                                })
+                                .catch(error => {
+                                    console.error(error);
+                                    that.DecryptedAppContext = "Error! Unable to decrypt appcontext";
+                                });
+                        })
+                        .catch((e) => {
+                            console.log(e);
+                            that.generateZoomAppAPIError(e);
+                        });
+
+                },
+                getRunningContext: async function (event) {
+                    let that = this
+                    console.log("getting running context")
+
+                    const RunningContext = await zoomSdk.getRunningContext()
+                        .then((ctx) => {
+                            console.log("getRunningContext=", ctx);
+                            that.RunningContext = ctx
+                        })
+                        .catch((e) => {
+                            console.log(e);
+                            that.generateZoomAppAPIError(e);
+                        });
+
+                },
+                showNotification: async function (event) {
+                    // this does not push a notification to the client UI
+                    // not currently using this.
+
+                    const notificationResults = await zoomSdk.showNotification({
+                        type: "info",
+                        title: "Hello",
+                        message: "This is an info notification"
+                    });
+
+                    console.log(notificationResults);
+                },
+                expandApp: async function (action) {
+                    let that = this;
+
+                    console.log("attempting to expand app");
+                    // this API does not work in ZP. Need to test in ZCC
+
+                    const expandAppResults = await zoomSdk.expandApp({ action: action })
+                        .then((ctx) => {
+                            console.log("expandApp=", ctx);
+                        })
+                        .catch((e) => {
+                            console.log(e);
+                            that.generateZoomAppAPIError(e);
+                        });
+                },
+                appPopout: async function (action) {
+                    // not working for some reason
+
+                    let that = this;
+
+                    console.log("attempting to appPopout");
+
+                    const appPopoutResults = await zoomSdk.appPopout({ action: action })
+                        .then((ctx) => {
+                            console.log("appPopout=", ctx);
+                        })
+                        .catch((e) => {
+                            console.log(e);
+                            that.generateZoomAppAPIError(e);
+                        });
+                },
+                closeApp: async function () {
+                    // not working for some reason
+
+                    let that = this;
+
+                    console.log("attempting to closeApp");
+
+                    const closeAppResults = await zoomSdk.closeApp()
+                        .then((ctx) => {
+                            console.log("closeApp=", ctx);
+                        })
+                        .catch((e) => {
+                            console.log(e);
+                            that.generateZoomAppAPIError(e);
+                        });
+                },
+                authorize: async function () {
+                    let that = this;
+
+                    console.log("attempting to authorize");
+
+                    const authorizeResults = await zoomSdk.authorize({
+                        state: 'TIA5UgoM38',  // should be generated by 3rd party backend https://appssdk.zoom.us/classes/ZoomSdk.ZoomSdk.html#authorize
+                        codeChallenge: 'o0qAEFdfsf' // should be generated by 3rd party backend https://appssdk.zoom.us/classes/ZoomSdk.ZoomSdk.html#authorize
+                    })
+                        .then((ctx) => {
+                            console.log("authorize=", ctx);
+                        })
+                        .catch((e) => {
+                            console.log(e);
+                            that.generateZoomAppAPIError(e);
+                        });
+                },
+                getEngagementContext: async function (event) {
+                    let that = this
+                    console.log("getting ZCC Engagement context")
+
+                    const engagementContext = await zoomSdk.getEngagementContext()
+                        .then((ctx) => {
+                            console.log("getEngagementContext=", ctx);
+                            that.engagementContext = ctx
+                        })
+                        .catch((e) => {
+                            console.log(e);
+                            that.generateZoomAppAPIError(e);
+                        });
+
+                },
+                makePhoneCall: async function (event) {
+                    let that = this;
+                    const makePhoneCallResult = await zoomSdk.makePhoneCall(that.phoneNumbertoCall)
+                        .then((ctx) => {
+                            console.log("makePhoneCallResult=", ctx);
+                        })
+                        .catch((e) => {
+                            console.log(e);
+                            that.generateZoomAppAPIError(e);
+                        });
+                },
+                getEngagementSecurableStatus: async function (event) {
+                    let that = this
+                    console.log("getting ZCC Engagement Secureable Status")
+
+                    const engagementSecureableStatus = await zoomSdk.getEngagementSecureableStatus()
+                        .then((ctx) => {
+                            console.log("getEngagementSecureableStatus=", ctx);
+                            that.engagementSecureableStatus = ctx
+                        })
+                        .catch((e) => {
+                            that.generateZoomAppAPIError(e);
+                        });
+
+                },
+                getPhoneContext: async function (event) {
+                    let that = this
+                    console.log("getting ZP context")
+
+                    const phoneContext = await zoomSdk.getPhoneContext()
+                        .then((ctx) => {
+                            console.log("getPhoneContext=", ctx);
+                            that.phoneContext = ctx
+                        })
+                        .catch((e) => {
+                            that.generateZoomAppAPIError(e);
+                        });
+
+                },
+                generateZoomAppAPIError: function (error) {
+                    this.zoomAppAPIError = error;
+                    var warningToast = new bootstrap.Toast(document.getElementById("warningToast"));
+                    warningToast.show();
+                },
+                logNewZoomAppSdkEvent: function (event) {
+                    let that = this;
+
+                    console.log(event);
+
+                    if (that.zoomapp_events) {
+                        that.zoomapp_events.push(event);
+                    }
+                    else {
+                        that.zoomapp_events = [event]
+                    }
+                },
+                logNewZccSdkEvent: function (event) {
+                    let that = this;
+
+                    console.log(event);
+
+                    if (that.zcc_events) {
+                        that.zcc_events.push(event);
+                    }
+                    else {
+                        that.zcc_events = [event]
+                    }
+                },
+                logNewZpSdkEvent: function (event) {
+                    let that = this;
+
+                    console.log(event);
+
+                    if (that.zp_events) {
+                        that.zp_events.push(event);
+                    }
+                    else {
+                        that.zp_events = [event]
+                    }
+                }
+            },
+            mounted() {
+                let that = this;
+
+                async function configureSdk() {
+
+                    try {
+                        // Configure the JS SDK, required to call JS APIs in the Zoom App
+                        const configResponse = await zoomSdk.config({
+                            capabilities: [
+                                //APIs
+                                "getSupportedJsApis",
+                                "authorize",
+                                "getRunningContext",
+                                "getUserContext",
+                                "showNotification",
+                                "getAppContext",
+                                "getEngagementContext",
+                                "getEngagementSecureableStatus",
+                                "getPhoneContext",
+                                "makePhoneCall",
+                                "showNotification",
+                                "expandApp",
+                                "appPopout",
+                                "closeApp",
+                                //Events
+                                "onAuthorized",
+                                "onAppPopout",
+                                "onExpandApp",
+                                "onRunningContextChange",
+                                "onEngagementContextChange",
+                                "onEngagementEnd",
+                                "onEngagementMediaRedirect",
+                                "onPhoneCalleeAnswered",
+                                "onPhoneCallerEnded",
+                                "onPhoneCalleeEnded",
+                                "onPhoneCalleeRejected",
+                                "onPhoneCallerMeetingInviting",
+                                "onPhoneCalleeMeetingInvite",
+                                "onPhoneContext",
+                                "onRenderedAppOpened",
+
+                            ],
+                        });
+                        console.log("App configured", configResponse);
+
+                        // Zoom App Events
+                        zoomSdk.onAuthorized((data) => {
+                            that.logNewZoomAppSdkEvent({
+                                "name": "onAuthorized", "payload": data
+                            });
+
+                            // with this callback, the app should send the data to the 3rd party backend
+                            // 3rd party backend should then get user access token https://developers.zoom.us/docs/integrations/oauth/
+                            // POST to https://zoom.us/oauth/token
+                            // 
+
+                        });
+                        zoomSdk.onAppPopout((data) => {
+                            that.logNewZoomAppSdkEvent({
+                                "name": "onAppPopout", "payload": data
+                            });
+                        });
+                        zoomSdk.onExpandApp((data) => {
+                            that.logNewZoomAppSdkEvent({
+                                "name": "onExpandApp", "payload": data
+                            });
+                        });
+                        zoomSdk.onRenderedAppOpened((data) => {
+                            that.logNewZoomAppSdkEvent({
+                                "name": "onRenderedAppOpened", "payload": data
+                            });
+                        });
+                        zoomSdk.onRunningContextChange((data) => {
+                            that.logNewZoomAppSdkEvent({
+                                "name": "onRunningContextChange", "payload": data
+                            });
+                        });
+                        // ZCC Events
+                        zoomSdk.onEngagementContextChange((data) => {
+                            that.logNewZccSdkEvent({
+                                "name": "onEngagementContextChange", "payload": data
+                            });
+                        });
+                        zoomSdk.onEngagementEnd((data) => {
+                            that.logNewZccSdkEvent({
+                                "name": "onEngagementEnd", "payload": data
+                            });
+                        });
+                        zoomSdk.onEngagementMediaRedirect((data) => {
+                            that.logNewZccSdkEvent({
+                                "name": "onEngagementMediaRedirect", "payload": data
+                            });
+                        });
+                        // ZP Events
+                        zoomSdk.onPhoneContext((data) => {
+                            that.logNewZpSdkEvent({
+                                "name": "onPhoneContext", "payload": data
+                            });
+                        });
+                        zoomSdk.onPhoneCalleeAnswered((data) => {
+                            that.logNewZpSdkEvent({
+                                "name": "onPhoneCalleeAnswered", "payload": data
+                            });
+                        });
+                        zoomSdk.onPhoneCallerEnded((data) => {
+                            that.logNewZpSdkEvent({
+                                "name": "onPhoneCallerEnded", "payload": data
+                            });
+                        });
+                        zoomSdk.onPhoneCalleeEnded((data) => {
+                            that.logNewZpSdkEvent({
+                                "name": "onPhoneCalleeEnded", "payload": data
+                            });
+                        });
+                        zoomSdk.onPhoneCalleeRejected((data) => {
+                            that.logNewZpSdkEvent({
+                                "name": "onPhoneCalleeRejected", "payload": data
+                            });
+                        });
+                        zoomSdk.onPhoneCallerMeetingInviting((data) => {
+                            that.logNewZpSdkEvent({
+                                "name": "onPhoneCallerMeetingInviting", "payload": data
+                            });
+                        });
+                        zoomSdk.onPhoneCalleeMeetingInvite((data) => {
+                            that.logNewZpSdkEvent({
+                                "name": "onPhoneCalleeMeetingInvite", "payload": data
+                            });
+                        });
+
+                    } catch (error) {
+                        console.log(error);
+                        that.generateZoomAppAPIError(error);
+                    }
+                }
+                configureSdk();
+
+
+                // get client ID for Zoom App
+                let uri = window.location.search.substring(1);
+                let params = new URLSearchParams(uri);
+
+                // convert entry id parameters to lowercase for case insensitive match
+                const newParams = new URLSearchParams();
+                for (const [name, value] of params) {
+                    newParams.append(name.toLowerCase(), value);
+                }
+
+                that.zoom_app_clientID = newParams.get("clientid");
+
+
+                // configure App Mode
+                let appMode = localStorage.getItem("appMode");
+
+                if (appMode) {
+                    that.appMode = appMode;
+                }
+
+
+                // Configure Contacts
+                let myContact = localStorage.getItem("myContact");
+                let myContact2 = localStorage.getItem("myContact2");
+
+                if (myContact) {
+                    that.contacts.push(JSON.parse(myContact));
+                }
+                else {
+                    let defaultmyContact = {
+                        "name": "Maurice Lawson", "id": "mlawson", "email": "maurice@example.com", "account": "Ozmo", "location": "San Jose", "orders": "5", "phone": "+16503331234"
+                    }
+                    that.contacts.push(defaultmyContact);
+                    localStorage.setItem("myContact", JSON.stringify(defaultmyContact));
+                }
+
+                if (myContact2) {
+                    that.contacts.push(JSON.parse(myContact2));
+
+                } else {
+                    let defaultmyContact2 = {
+                        "name": "Ashlee York", "id": "ayork", "email": "ashlee@example.com", "account": "Ozmo", "location": "Houston", "orders": "2", "phone": "+16503338784"
+                    }
+                    that.contacts.push(defaultmyContact2);
+                    localStorage.setItem("myContact2", JSON.stringify(defaultmyContact2));
+                }
+
+
+
+            }
+        });
+
+        app.component('zoom-app-api', {
+            props: ['zoomappfunction', 'zoomappdata'],
+            template: `
+            <div class="card bg-light mb-3">
+                <div class="card-header">
+                    <p>{{ zoomappfunction }}
+                        <svg v-on:click="$emit('run-zoomappfunction')" xmlns="http://www.w3.org/2000/svg" width="16"
+                            height="16" fill="currentColor" class="bi bi-repeat" viewBox="0 0 16 16">
+                            <path
+                                d="M11 5.466V4H5a4 4 0 0 0-3.584 5.777.5.5 0 1 1-.896.446A5 5 0 0 1 5 3h6V1.534a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384l-2.36 1.966a.25.25 0 0 1-.41-.192Zm3.81.086a.5.5 0 0 1 .67.225A5 5 0 0 1 11 13H5v1.466a.25.25 0 0 1-.41.192l-2.36-1.966a.25.25 0 0 1 0-.384l2.36-1.966a.25.25 0 0 1 .41.192V12h6a4 4 0 0 0 3.585-5.777.5.5 0 0 1 .225-.67Z">
+                            </path>
+                        </svg>
+                        <svg @click.prevent="$emit('zoomappdata-null')" xmlns="http://www.w3.org/2000/svg" width="16"
+                            height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
+                            <path
+                                d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6Z">
+                            </path>
+                            <path
+                                d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1ZM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118ZM2.5 3h11V2h-11v1Z">
+                            </path>
+                        </svg>
+                    </p>
+                </div>
+                <div class="card-body">
+                    <pre v-if="zoomappdata"
+                        class="card-text">{{JSON.stringify(zoomappdata, undefined, 2)}}</pre>
+                </div>
+            </div>
+            `
+        });
+
+
+
+
+        app.mount('#app');
+    </script>
+
+
+</body>
+
+</html>
