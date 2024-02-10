@@ -36,7 +36,7 @@
  
                 <nav>
                     <div class="nav nav-tabs" id="nav-tab" role="tablist">
-                        <button class="nav-link" id="nav-zccevent-tab" data-bs-toggle="tab"
+                        <button class="nav-link active" id="nav-zccevent-tab" data-bs-toggle="tab"
                             data-bs-target="#nav-zccevent" type="button" role="tab" aria-controls="nav-zccevent"
                             aria-selected="true">
                             ZCC Events
@@ -46,7 +46,7 @@
                             type="button" role="tab" aria-controls="nav-zpevent" aria-selected="true">
                             ZP Events
                         </button>
-                         <button class="nav-link active" id="nav-zoomappapis-tab" data-bs-toggle="tab"
+                         <button class="nav-link" id="nav-zoomappapis-tab" data-bs-toggle="tab"
                             data-bs-target="#nav-zoomappapis" type="button" role="tab" aria-controls="nav-zoomappapis"
                             aria-selected="false">
                             Zapp APIs
@@ -78,17 +78,20 @@
                             is listening for
                             onEngagementContextChange, onEngagementEnd, & onEngagementMediaRedirect</p>
                         <button @click.prevent="zcc_events=null">Clear Events</button><br><br>
-                        <div v-if="zcc_events">
-                            <div v-for="event in zcc_events.slice().reverse()" class="card bg-light mb-3">
-                                <div class="card-header">{{event.name}}</div>
-                                <div class="card-body">
-                                    <pre class="card-text">{{JSON.stringify(event.payload, undefined, 2)}}</pre>
-                                </div>
+                        <div v-if="AppContext" class="card bg-light mb-3">
+                            <div class="card-header">
+                                Decrypted App Context
                             </div>
-                        </div>
-                        <div v-else>
-                            <p>Waiting for first event...</p>
-                        </div>
+                            <div class="card-body">
+                                <p>Note: app context shown above is an encrypted json object that must be
+                                    decrypted by
+                                    Zoom
+                                    App
+                                    clientID/clientSecret. Below is the decrypted object.
+                                </p>
+                                <pre v-if="DecryptedAppContext"
+                                    class="card-text">{{JSON.stringify(DecryptedAppContext, undefined, 2)}}</pre>
+                            </div>
                     </div>
                     
 
