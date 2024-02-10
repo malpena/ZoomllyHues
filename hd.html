@@ -36,7 +36,7 @@
  
                 <nav>
                     <div class="nav nav-tabs" id="nav-tab" role="tablist">
-                        <button class="nav-link active" id="nav-zccevent-tab" data-bs-toggle="tab"
+                        <button class="nav-link" id="nav-zccevent-tab" data-bs-toggle="tab"
                             data-bs-target="#nav-zccevent" type="button" role="tab" aria-controls="nav-zccevent"
                             aria-selected="true">
                             ZCC Events
@@ -47,7 +47,7 @@
                             ZP Events
                         </button>
 
-                        <button class="nav-link" id="nav-zoomappapis-tab" data-bs-toggle="tab"
+                        <button class="nav-link active" id="nav-zoomappapis-tab" data-bs-toggle="tab"
                             data-bs-target="#nav-zoomappapis" type="button" role="tab" aria-controls="nav-zoomappapis"
                             aria-selected="false">
                             Zapp APIs
@@ -72,7 +72,7 @@
                 </div>
                 <div class="tab-content" id="nav-tabContent">
                     <!-- ZCC Events -->
-                    <div class="tab-pane fade show active" id="nav-zccevent" role="tabpanel"
+                    <div class="tab-pane fade" id="nav-zccevent" role="tabpanel"
                         aria-labelledby="nav-zccevent-tab">
                         <p>This section shows Zoom Contact Center engagement events received by this Zoom App. This Zoom
                             App
@@ -112,8 +112,8 @@
                             <p>Waiting for first event...</p>
                         </div>
                     </div>
-<!-- Zoom App APIs -->
-                    <div class="tab-pane fade" id="nav-zoomappapis" role="tabpanel"
+					<!-- Zoom App APIs -->
+                    <div class="tab-pane fade show active" id="nav-zoomappapis" role="tabpanel"
                         aria-labelledby="nav-zoomappapis-tab">
                         <p>This section shows general Zoom Apps SDK methods/apis and the data returned by Zoom Apps SDK.
                             This data must be polled by this app. For this test app purpose, you need to manually click
