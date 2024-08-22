@@ -4,7 +4,7 @@
 
 <h2>External JavaScript</h2>
 
-<p id="demo">A Paragraph 17.</p>
+<p id="demo">A Paragraph 18.</p>
 
 <button type="button" onclick="configureApp()">Click Me</button>
 
@@ -17,7 +17,7 @@
 async function configureApp() {
 
    const getRunningContextResponse = zoomSdk.getRunningContext();
-   document.getElementById("demo").innerHTML=getRunningContextResponse.RunningContext;
+   document.getElementById("demo").innerHTML=getRunningContextResponse.context.RunningContext;
 }
 
 </script>
