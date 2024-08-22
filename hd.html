@@ -22,7 +22,7 @@ async function configureApp() {
      capabilities: ["shareApp"]
    })
 
-   const runningContextResponse = await zoomSdk.getRunningContext()   
+   const runningContextResponse = await zoomSdk.getAppContext()   
    document.getElementById("demo").innerHTML=runningContextResponse.context;
 }
 
