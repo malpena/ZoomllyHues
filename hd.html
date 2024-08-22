@@ -4,9 +4,9 @@
 
 <h2>External JavaScript</h2>
 
-<p id="demo">A Paragraph 25.</p>
+<p id="demo">A Paragraph 27.</p>
 
-<button type="button" onclick="configureApp()">Click Me</button>
+<button type="button" onclick="getRunningContext()">Click Me</button>
 
 <p>This example uses a full web URL to link to "myScript.js".</p>
 <p>(myFunction is stored in "myScript.js")</p>
@@ -14,14 +14,19 @@
 <script src="https://appssdk.zoom.us/sdk.js"></script>
 
 <script>
-async function configureApp() {
-   let that = ""
-   const configResponse = await zoomSdk.getPhoneContext()
-   .then((ctx) => {
-                            that = ctx
+getRunningContext: async function (event) {
+                    let that = "aaa"
+                    console.log("getting running context")
+
+                    const RunningContext = await zoomSdk.getRunningContext()
+                        .then((ctx) => {
+                            that.RunningContext = ctx
                         })
-   document.getElementById("demo").innerHTML=that;
-}
+                        .catch((e) => {
+                            that.generateZoomAppAPIError(e);
+                        });
+               document.getElementById("demo").innerHTML=that;
+                }
 
 </script>
 
