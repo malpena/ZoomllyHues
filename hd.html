@@ -22,8 +22,8 @@ async function configureApp() {
      capabilities: ["shareApp"]
    })
 
-   const runningContextResponse = await zoomSdk.getAppContext()   
-   document.getElementById("demo").innerHTML=runningContextResponse.context;
+   const runningContextResponse = await zoomSdk.getPhoneContext()   
+   document.getElementById("demo").innerHTML=runningContextResponse.activeTab;
 }
 
 </script>
