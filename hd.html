@@ -4,7 +4,7 @@
 
 <h2>External JavaScript</h2>
 
-<p id="demo">A Paragraph 10.</p>
+<p id="demo">A Paragraph 11.</p>
 
 <button type="button" onclick="configureApp()">Click Me</button>
 
@@ -17,7 +17,7 @@
 async function configureApp() {
 
    const configResponse = zoomSdk.GetPhoneContext();
-   document.getElementById("demo").innerHTML=configResponse;
+   document.getElementById("demo").innerHTML=configResponse.callStatus;
 }
 
 </script>
