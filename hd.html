@@ -23,7 +23,7 @@ async function configureApp() {
    })
 
    const runningContextResponse = await zoomSdk.getPhoneContext()
-   const runningEngagementResponse = await zoomSdk.getEngagementContext({engagementContext: "ZfOekri8RZe3cL3oZE2vGA"})
+   
    
    document.getElementById("demo").innerHTML=runningContextResponse.activeTab;
 }
