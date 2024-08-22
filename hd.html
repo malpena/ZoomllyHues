@@ -24,7 +24,7 @@ async function configureApp() {
 
    const runningContextResponse = await zoomSdk.getPhoneContext()
    const runningEngagementResponse = await zoomSdk.getEngagementContext()
-   const runningEngagementStatusResponse = await zoomSdk.getEngagementStatus({ engagementId: runningEngagementResponse.EngagementId })
+   const runningEngagementStatusResponse = await zoomSdk.getEngagementStatus({ engagementId: runningEngagementResponse.engagementContext.EngagementId })
    
    document.getElementById("demo").innerHTML=runningEngagementResponse.engagementContext.startTime;
 }
