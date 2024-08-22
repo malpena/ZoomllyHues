@@ -24,9 +24,9 @@ async function configureApp() {
 
    const runningContextResponse = await zoomSdk.getPhoneContext()
    const runningEngagementResponse = await zoomSdk.getEngagementContext()
-   const engagementStatus = zoomSdk.getEngagementStatus({ engagementId: "RJPCKlRATUuIwKCACNxgcA" })
+   const engagementStatus = zoomSdk.getEngagementStatus({ engagementId: "6RLYaeMES6Sv2V7LOl0S6Q" })
    
-   document.getElementById("demo").innerHTML=engagementStatus.isConference;
+   document.getElementById("demo").innerHTML=engagementStatus.engagementId;
 }
 
 </script>
