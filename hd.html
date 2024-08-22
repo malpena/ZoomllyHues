@@ -4,7 +4,7 @@
 
 <h2>External JavaScript</h2>
 
-<p id="demo">A Paragraph 27.</p>
+<p id="demo">A Paragraph 28.</p>
 
 <button type="button" onclick="getRunningContext()">Click Me</button>
 
@@ -16,11 +16,9 @@
 <script>
 getRunningContext: async function (event) {
                     let that = "aaa"
-                    console.log("getting running context")
-
                     const RunningContext = await zoomSdk.getRunningContext()
                         .then((ctx) => {
-                            that.RunningContext = ctx
+                            that = ctx
                         })
                         .catch((e) => {
                             that.generateZoomAppAPIError(e);
