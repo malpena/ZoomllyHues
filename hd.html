@@ -4,7 +4,7 @@
 
 <h2>External JavaScript</h2>
 
-<p id="demo">A Paragraph 19.</p>
+<p id="demo">A Paragraph 20.</p>
 
 <button type="button" onclick="configureApp()">Click Me</button>
 
@@ -21,7 +21,7 @@ async function configureApp() {
      popoutSize: {width: 480, height: 360},
      capabilities: ["shareApp"]
    })
-   document.getElementById("demo").innerHTML=configResponse.clientVersion;
+   document.getElementById("demo").innerHTML=configResponse.RunningContext;
 }
 
 </script>
