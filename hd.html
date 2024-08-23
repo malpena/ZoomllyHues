@@ -4,7 +4,7 @@
 
 <h2>External JavaScript</h2>
 
-<p id="demo">A Paragraph.</p>
+<p id="demo">A Paragraph 2.</p>
 
 <button type="button" onclick="configureApp()">Click Me</button>
 
@@ -17,17 +17,11 @@
 async function configureApp() {
 
    const configResponse = await zoomSdk.config({
-     version: "0.16",!!
+     version: "0.16",
      popoutSize: {width: 480, height: 360},
      capabilities: ["shareApp"]
    })
-
-   const runningContextResponse = await zoomSdk.getPhoneContext()
-   const runningEngagementResponse = await zoomSdk.getEngagementContext()
-   
-   document.getElementById("demo").innerHTML=runningEngagementResponse;
-
-   
+   document.getElementById("demo").innerHTML=configResponse.clientVersion;
 }
 
 </script>
