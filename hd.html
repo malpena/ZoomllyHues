@@ -4,7 +4,7 @@
 
 <h2>External JavaScript</h2>
 
-<p id="demo">A Paragraph here I am as well! </p>
+<p id="demo">A Paragraph here I am as well!! </p>
 
 <button type="button" onclick="configureApp()">Click Me</button>
 
@@ -25,10 +25,10 @@ async function configureApp() {
    const runningContextResponse = await zoomSdk.getPhoneContext()
    const runningEngagementResponse = await zoomSdk.getEngagementContext()
    //const engagementStatus = zoomSdk.getEngagementStatus({ engagementId: "TWcYtpW0QlyaHAkKKX8AgA" })
-   const engagementSecurableStatus = zoomSdk.getEngagementSecurableStatus({ engagementId: "7nwYY7z9QPqUo5c3NuxR6g" })
+   //const engagementSecurableStatus = zoomSdk.getEngagementSecurableStatus({ engagementId: "7nwYY7z9QPqUo5c3NuxR6g" })
    
-   document.getElementById("demo").innerHTML=JSON.stringify(runningEngagementResponse.engagementContext);
    //document.getElementById("demo").innerHTML=JSON.stringify(runningEngagementResponse.engagementContext);
+   document.getElementById("demo").innerHTML=JSON.stringify(runningEngagementResponse.engagementContext);
    
 }
 
