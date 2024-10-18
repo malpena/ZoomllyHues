@@ -1,29 +1,212 @@
-<!DOCTYPE html>
 <html>
+<head>
+
+<title>Customer Profile </title>
+  
+<link href="https://demo.freescout.net/css/builds/db68c3f9e477837ac80e420c99f137d858565123991.css" rel="stylesheet">
+
+<style>
+	table {
+	  border-collapse: collapse;
+	  width: 100%;
+	}
+
+	th, td {
+	  text-align: left;
+	  padding: 8px;
+	}
+
+	tr:nth-child(even) {
+	  background-color: #D6EEEE;
+	}
+</style>
+
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+	.accordion {
+	  background-color: #eee;
+	  color: #444;
+	  cursor: pointer;
+	  padding: 18px;
+	  width: 100%;
+	  border: none;
+	  text-align: left;
+	  outline: none;
+	  font-size: 15px;
+	  transition: 0.4s;
+	}
+
+	.active, .accordion:hover {
+	  background-color: #ccc;
+	}
+
+	.accordion:after {
+	  content: '\002B';
+	  color: #777;
+	  font-weight: bold;
+	  float: right;
+	  margin-left: 5px;
+	}
+
+	.active:after {
+	  content: "\2212";
+	}
+
+	.panel {
+	  padding: 0 18px;
+	  background-color: white;
+	  max-height: 0;
+	  overflow: hidden;
+	  transition: max-height 0.2s ease-out;
+	}
+</style>
+
+<style>
+	table, th, td {
+	  border: 1px solid black;
+	  border-collapse: collapse;
+	}
+</style>
+
+</head>
+
 <body>
 
-<h2>External JavaScript</h2>
+<div class="conv-customer-block conv-sidebar-block">
+	<h3><a href="">Dave Grohl</a></h3>
+	<h4>daveg@gmail.com<h4>
+          
+</div>
+	
+<button class="accordion"><b>Past Orders</b></button>
+<div class="panel">
+  <p>
+  
+  <table>
+  <tr>
+  <th>Item</th>
+  <th>Date</th>
+  <th>Status</th>
+  </tr>
+  <tr>
+  <td>Lounge Set</td>
+  <td>10-Oct-2024</td>
+  <td>Processing</td>
+  </tr>
+  <tr>
+  <td>King Bed</td>
+  <td>5-Jan-2024</td>
+  <td>Delivered</td>
+  </tr>
+  <tr>
+  <td>Standing Lamp</td>
+  <td>20-Nov-2023</td>
+  <td>Delivered</td>
+  </tr>
+</table>
+  
+  </p>
+</div>
 
-<p id="demo">A Paragraphp.</p>
+<button class="accordion"><b>Dispatch Info</b></button>
+<div class="panel">
+  <p>
+  
+  <table>
+  <tr>
+  <td><b><h2>Lounge Set</h2></b><p>
+  <b>Estimated Delivery:</b> 10-Nov-2024<p>
+  <p id="status"><b>Status:</b>  To be delivered</p>
+  <b>Dispatch Notes:</b> Item in stock in warehouse.<p>
+  <b>Actions:</b> <button type="button" onclick="changeStatus()">Reschedule</button>
+   <button type="button" onclick="notifyEvent()">Alert</button>
 
-<button type="button" onclick="configureApp()">Click Me</button>
+  
+  </td>
 
-<p>This example uses a full web URL to link to "myScript.js".</p>
-<p>(myFunction is stored in "myScript.js")</p>
+  </tr>
 
-<script src="https://appssdk.zoom.us/sdk.js"></script>
+</table>
+  
+  </p>
+</div>
+
 
 <script>
-async function configureApp() {
+var acc = document.getElementsByClassName("accordion");
+var i;
 
-   const configResponse = await zoomSdk.config({
-     version: "0.16",
-     popoutSize: {width: 480, height: 360},
-     capabilities: ["shareApp"]
-   })
-   document.getElementById("demo").innerHTML="Hello";
+for (i = 0; i < acc.length; i++) {
+  acc[i].addEventListener("click", function() {
+    this.classList.toggle("active");
+    var panel = this.nextElementSibling;
+    if (panel.style.maxHeight) {
+      panel.style.maxHeight = null;
+    } else {
+      panel.style.maxHeight = panel.scrollHeight + "px";
+    } 
+  });
+}
+</script>
+
+
+<script>
+async function changeStatus() {
+
+
+   //const configResponse = await zoomSdk.config({
+   //  version: "0.16",
+   //  popoutSize: {width: 480, height: 360},
+   //  capabilities: ["shareApp"]
+   //})
+   document.getElementById("status").innerHTML="<b>Status:</b>  Pending Reschedule";
 }
 
+</script>
+
+
+<script>
+async function notifyEvent() {
+    
+	// The endpoint URL
+        const url = 'https://inbots.zoom.us/incoming/hook/HgY6IYQcThi2dsYbnCUZ6g?format=full';
+
+        // The data to be sent
+        const data = {
+            name: 'John Doe',
+            email: 'johndoe@example.com'
+        };
+
+        // Convert data to JSON string
+        const jsonData = JSON.stringify(data);
+
+        // Authorization token (replace with actual token)
+        const token = 'HgLYneOTsaI1GBVtznsdQ';
+
+        // Calculate Content-Length based on the size of the JSON string
+        const contentLength = jsonData.length;
+
+        // Sending the POST request using fetch
+        fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': token,
+                'Content-Length': contentLength.toString()
+            },
+            body: jsonData
+        })
+        .then(response => response.json())
+        .then(data => {
+            document.getElementById('response').textContent = 'Success: ' + JSON.stringify(data);
+        })
+        .catch((error) => {
+            document.getElementById('response').textContent = 'Error: ' + error;
+        });
+    
+	
+}
 </script>
 
 
