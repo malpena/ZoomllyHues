@@ -17,7 +17,7 @@
 	}
 
 	tr:nth-child(even) {
-	  background-color: #D6EEEE;
+	  background-color: #EFEFF4;
 	}
 </style>
 
@@ -25,7 +25,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <style>
 	.accordion {
-	  background-color: #eee;
+	  background-color: #EFEFF4;
 	  color: #444;
 	  cursor: pointer;
 	  padding: 18px;
@@ -33,12 +33,14 @@
 	  border: none;
 	  text-align: left;
 	  outline: none;
-	  font-size: 15px;
+	  font-size: 14px;
 	  transition: 0.4s;
 	}
 
 	.active, .accordion:hover {
-	  background-color: #ccc;
+	  background-color: #0E72ED;
+	  font-size: 15px;
+	  color: #ffffff;
 	}
 
 	.accordion:after {
@@ -73,13 +75,37 @@
 
 <body>
 
+<div class="customer-photo-container">
+    	<img src="https://zoomllyhues.netlify.app/default-avatar.png" alt="" class="customer-photo">
+</div>
 <div class="conv-customer-block conv-sidebar-block">
-	<h3><a href="">Dave Grohl</a></h3>
+	<h3 color='#EFEFF4'><a href="">Dave Grohl</a></h3>
 	<h4>daveg@gmail.com<h4>
           
 </div>
 	
+<button class="accordion"><b>Customer Details</b></button>
+
+<div class="panel">
+  <p>
+  
+  <table>
+  <tr>
+  <td>
+  <b>Address:</b> 1/9 Castlereagh St. Sydney NSW 2000<br>
+  <b>Type:</b> Premium<br>
+  <b>Member Since:</b> 1-Jan-2023<br>
+  </td>
+
+  </tr>
+
+</table>
+  
+  </p>
+</div>
+
 <button class="accordion"><b>Past Orders</b></button>
+
 <div class="panel">
   <p>
   
@@ -90,7 +116,7 @@
   <th>Status</th>
   </tr>
   <tr>
-  <td>Lounge Set</td>
+  <td>Couch Set</td>
   <td>10-Oct-2024</td>
   <td>Processing</td>
   </tr>
@@ -115,13 +141,11 @@
   
   <table>
   <tr>
-  <td><b><h2>Lounge Set</h2></b><p>
-  <b>Estimated Delivery:</b> 10-Nov-2024<p>
+  <td><b><h3>Lounge Set</h3></b><br>
+  <b>Estimated Delivery:</b> 10-Nov-2024<br>
+  <b>Dispatch Notes:</b> Item in stock in warehouse<br>
   <p id="status"><b>Status:</b>  To be delivered</p>
-  <b>Dispatch Notes:</b> Item in stock in warehouse.<p>
   <b>Actions:</b> <button type="button" onclick="notifyEvent()">Reschedule</button>
-
-
   
   </td>
 
