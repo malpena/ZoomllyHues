@@ -119,8 +119,8 @@
   <b>Estimated Delivery:</b> 10-Nov-2024<p>
   <p id="status"><b>Status:</b>  To be delivered</p>
   <b>Dispatch Notes:</b> Item in stock in warehouse.<p>
-  <b>Actions:</b> <button type="button" onclick="changeStatus()">Reschedule</button>
-   <button type="button" onclick="notifyEvent()">Alert</button>
+  <b>Actions:</b> <button type="button" onclick="notifyEvent()">Reschedule</button>
+
 
   
   </td>
@@ -132,6 +132,27 @@
   </p>
 </div>
 
+<button class="accordion"><b>Open Tickets</b></button>
+<div class="panel">
+  <p>
+    <b>Actions:</b> <button type="button" onclick="getCases()">Get</button>
+  
+  <table>
+  <tr>
+  <th>Ticket</th>
+  <th>Description</th>
+  <th>Status</th>
+  </tr>
+  <tr>
+  <td>Lounge Set</td>
+  <td>10-Oct-2024</td>
+  <td>Processing</td>
+  </tr>
+
+</table>
+  
+  </p>
+</div>
 
 <script>
 var acc = document.getElementsByClassName("accordion");
@@ -150,65 +171,142 @@ for (i = 0; i < acc.length; i++) {
 }
 </script>
 
-
-<script>
-async function changeStatus() {
-
-
-   //const configResponse = await zoomSdk.config({
-   //  version: "0.16",
-   //  popoutSize: {width: 480, height: 360},
-   //  capabilities: ["shareApp"]
-   //})
-   document.getElementById("status").innerHTML="<b>Status:</b>  Pending Reschedule";
-}
-
-</script>
-
-
 <script>
 async function notifyEvent() {
     
-	// The endpoint URL
-        const url = 'https://inbots.zoom.us/incoming/hook/HgY6IYQcThi2dsYbnCUZ6g?format=full';
+	document.getElementById("status").innerHTML="<b>Status:</b>  Pending Reschedule";
+	
+	const headers = new Headers()
+	headers.append("Content-Type", "application/json")
 
-        // The data to be sent
-        const data = {
-            name: 'John Doe',
-            email: 'johndoe@example.com'
-        };
+	const body = {
+	  "test": "event"
+	}
 
-        // Convert data to JSON string
-        const jsonData = JSON.stringify(data);
+	const options = {
+	  method: "POST",
+	  headers,
+	  mode: "cors",
+	  body: JSON.stringify(body),
+	}
 
-        // Authorization token (replace with actual token)
-        const token = 'HgLYneOTsaI1GBVtznsdQ';
-
-        // Calculate Content-Length based on the size of the JSON string
-        const contentLength = jsonData.length;
-
-        // Sending the POST request using fetch
-        fetch(url, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': token,
-                'Content-Length': contentLength.toString()
-            },
-            body: jsonData
-        })
-        .then(response => response.json())
-        .then(data => {
-            document.getElementById('response').textContent = 'Success: ' + JSON.stringify(data);
-        })
-        .catch((error) => {
-            document.getElementById('response').textContent = 'Error: ' + error;
-        });
+	fetch("https://eowc36laj5856gr.m.pipedream.net", options)
     
 	
 }
 </script>
 
+<script>
+async function getCases() {
+    
+	
+	const headers = new Headers()
+	headers.append("Content-Type", "application/json")
+
+	const body = {
+	  "test": "event"
+	}
+
+	const options = {
+	  method: "POST",
+	  headers,
+	  mode: "cors",
+	  body: JSON.stringify(body),
+	}
+
+	fetch("https://eo5slgnyu0f0kjz.m.pipedream.net", options)
+    
+	
+}
+</script>
+
+<script>
+	async function authenticateAndGetCases() {
+        try {
+            // Step 1: Get the OAuth token
+            const token = await getSalesforceToken();
+
+            // Step 2: Use the token to fetch cases
+            if (token) {
+                await getSalesforceCases(token);
+            }
+        } catch (error) {
+            document.getElementById('response').textContent = 'Error: ' + error.message;
+        }
+    }
+
+    async function getSalesforceToken() {
+        // Salesforce instance domain for authentication (change to your instance if needed)
+        const tokenEndpoint = 'https://login.salesforce.com/services/oauth2/token';
+
+        // Authentication details (replace with your own credentials)
+        const clientId = '3MVG9n_HvETGhr3CBsjIWJjtobJd75YDSpuUb6SEUNHMsZ54.UGVhSmOh.asiUxqAShEEyodqGZR2JIT.2nrc';
+        const clientSecret = '599DDB2AA2E38935D848ABD7D179D882F53F171FB078B694D51B19C9641B7B5F';
+        const username = 'mario.pena@zoomineer.com';
+        const password = 'Mpzm2022!@6FqoVUSvpB2Shcbo3oV6Rpukje';  // Password + Security Token
+
+        // Preparing URL-encoded data for the POST request
+        const body = new URLSearchParams({
+            grant_type: 'password',
+            client_id: clientId,
+            client_secret: clientSecret,
+            username: username,
+            password: password
+        });
+
+        try {
+            const response = await fetch(tokenEndpoint, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body: body.toString()
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+                // Return the OAuth token
+                return data.access_token;
+            } else {
+                throw new Error('Failed to authenticate: ' + JSON.stringify(data));
+            }
+        } catch (error) {
+            throw new Error('Error fetching token: ' + error.message);
+        }
+    }
+
+    async function getSalesforceCases(token) {
+        // Salesforce instance URL (replace with your Salesforce domain)
+        const instanceUrl = 'https://zoomineer4-dev-ed.develop.my.salesforce.com';
+
+        // API endpoint to fetch cases (replace with correct query or API version if needed)
+        const endpoint = `${instanceUrl}/services/data/v57.0/query/?q=SELECT+Id,Subject,Status+FROM+Case+WHERE+OwnerId='your-user-id'`;
+
+        try {
+            // Sending GET request to Salesforce API with the token
+            const response = await fetch(endpoint, {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                // Display the cases
+                document.getElementById('response').textContent = 'Cases: ' + JSON.stringify(data.records);
+            } else {
+                const error = await response.text();
+                document.getElementById('response').textContent = 'Error: ' + error;
+            }
+        } catch (error) {
+            document.getElementById('response').textContent = 'Error fetching cases: ' + error.message;
+        }
+    }
+	
+</script>
 
 </body>
 </html>
