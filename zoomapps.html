@@ -160,23 +160,11 @@
 <div class="panel">
   <p>
     <b>Actions:</b> <button type="button" onclick="getCases()">Get</button>
-  
-  <table>
-  <tr>
-  <th>Ticket</th>
-  <th>Description</th>
-  <th>Status</th>
-  </tr>
-  <tr>
-  <td>Lounge Set</td>
-  <td>10-Oct-2024</td>
-  <td>Processing</td>
-  </tr>
-
-</table>
-  
+     
   </p>
+<div id="table-container"></div>
 </div>
+
 
 <script>
 var acc = document.getElementsByClassName("accordion");
@@ -244,7 +232,69 @@ async function getCases() {
 	const data = await response.json();
 	console.log (data)
 	console.log (data[0].CaseNumber)
+	// Create the table and log it
+	const tableHTML = createTable(data);
+	document.getElementById("table-container").innerHTML += tableHTML;
 }
+</script>
+
+<script>
+async function getCasesPrint() {
+ 
+
+// Sample input data array
+const casesArray = [
+  {
+    "attributes": {
+      "type": "Case",
+      "url": "/services/data/v57.0/sobjects/Case/500Ig0000059c86IAA"
+    },
+    "Id": "500Ig0000059c86IAA",
+    "CaseNumber": "00001180",
+    "Subject": "Support: New Deposit or withdrawal",
+    "Status": "New"
+  },
+  {
+    "attributes": {
+      "type": "Case",
+      "url": "/services/data/v57.0/sobjects/Case/5002w00000gFcsXAAS"
+    },
+    "Id": "5002w00000gFcsXAAS",
+    "CaseNumber": "00001032",
+    "Subject": "Change of address",
+    "Status": "Working"
+  }
+];
+ 
+// Create the table and log it
+const tableHTML = createTable(casesArray);
+document.getElementById("table-container").innerHTML += tableHTML;
+	
+}
+
+function createTable(dataArray) {
+  // Start building the HTML table
+  let table = "<table border='1'>";
+  table += "<thead><tr><th>Case Number</th><th>Subject</th><th>Status</th></tr></thead>";
+  table += "<tbody>";
+
+  // Loop through the array to populate the table rows
+  dataArray.forEach((item) => {
+    table += `<tr>
+                <td><a href="https://zoomineer4-dev-ed.develop.my.salesforce.com/lightning/r/Case/${item.Id}/view" target="_blank">${item.CaseNumber}</a></td>
+                <td>${item.Subject}</td>
+                <td>${item.Status}</td>
+              </tr>`;
+  });
+
+  // End the table
+  table += "</tbody></table>";
+
+  // Return the table HTML string
+  return table;
+}
+
+
 </script>
 
 <script>
