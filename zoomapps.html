@@ -230,9 +230,11 @@ async function getCases() {
     const response = await fetch("https://eo5slgnyu0f0kjz.m.pipedream.net", options)
 	//console.log (response)
 	const data = await response.json();
-	//console.log (data)
 	//console.log (data[0].CaseNumber)
 	// Create the table and log it
+	setTimeout(2000);
+	console.log ("ACA");
+	console.log (data);
 	const tableHTML = createTable(data);
 	document.getElementById("table-container").innerHTML += tableHTML;
 }
