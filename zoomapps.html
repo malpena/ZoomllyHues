@@ -232,48 +232,15 @@ async function getCases() {
 	const data = await response.json();
 	//console.log (data[0].CaseNumber)
 	// Create the table and log it
-	setTimeout(2000);
-	console.log ("ACA");
-	console.log (data.records);
+	setTimeout(1000);
+	//console.log ("ACA");
+	//console.log (data.records);
 	const tableHTML = createTable(data.records);
 	document.getElementById("table-container").innerHTML += tableHTML;
 }
 </script>
 
 <script>
-async function getCasesPrint() {
- 
-
-// Sample input data array
-const casesArray = [
-  {
-    "attributes": {
-      "type": "Case",
-      "url": "/services/data/v57.0/sobjects/Case/500Ig0000059c86IAA"
-    },
-    "Id": "500Ig0000059c86IAA",
-    "CaseNumber": "00001180",
-    "Subject": "Support: New Deposit or withdrawal",
-    "Status": "New"
-  },
-  {
-    "attributes": {
-      "type": "Case",
-      "url": "/services/data/v57.0/sobjects/Case/5002w00000gFcsXAAS"
-    },
-    "Id": "5002w00000gFcsXAAS",
-    "CaseNumber": "00001032",
-    "Subject": "Change of address",
-    "Status": "Working"
-  }
-];
- 
-// Create the table and log it
-const tableHTML = createTable(casesArray);
-document.getElementById("table-container").innerHTML += tableHTML;
-	
-}
-
 function createTable(dataArray) {
   // Start building the HTML table
   console.log (dataArray)
