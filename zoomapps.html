@@ -228,7 +228,7 @@ async function getCases() {
 
 	//fetch("https://eo5slgnyu0f0kjz.m.pipedream.net", options)
     const response = await fetch("https://eo5slgnyu0f0kjz.m.pipedream.net", options)
-	console.log (response)
+	//console.log (response)
 	const data = await response.json();
 	//console.log (data)
 	//console.log (data[0].CaseNumber)
@@ -274,6 +274,7 @@ document.getElementById("table-container").innerHTML += tableHTML;
 
 function createTable(dataArray) {
   // Start building the HTML table
+  console.log (dataArray)
   let table = "<table border='1'>";
   table += "<thead><tr><th>Case Number</th><th>Subject</th><th>Status</th></tr></thead>";
   table += "<tbody>";
