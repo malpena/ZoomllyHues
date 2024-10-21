@@ -235,7 +235,7 @@ async function getCases() {
 	setTimeout(2000);
 	console.log ("ACA");
 	console.log (data.records);
-	const tableHTML = createTable(data);
+	const tableHTML = createTable(data.records);
 	document.getElementById("table-container").innerHTML += tableHTML;
 }
 </script>
