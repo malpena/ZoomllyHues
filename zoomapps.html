@@ -231,7 +231,7 @@ async function getCases() {
 	console.log (response)
 	const data = await response.json();
 	console.log (data)
-	console.log (data[0].CaseNumber)
+	//console.log (data[0].CaseNumber)
 	// Create the table and log it
 	const tableHTML = createTable(data);
 	document.getElementById("table-container").innerHTML += tableHTML;
